@@ -1,4 +1,0 @@
-(
- (:id "sha1:85457c729378cc93c732b6a3941c8e4f9c2e60f3" :fingerprint "sha1:ab:a6:d7:6a:b3:d3:63:fa:19:0d:65:41:60:23:6e:ef:d3:2a:46:dc" :host "marmalade-repo.org:443" :conditions (:insecure :unknown-ca :invalid))
- (:id "sha1:85b31c268009209a8d3c5387033b219264f7e62b" :fingerprint "sha1:e1:4d:b9:8f:51:6b:ab:b8:28:59:b8:2e:11:42:fc:98:7a:8f:dc:07" :host "melpa.org:443" :conditions (:insecure :unknown-ca :invalid))
-)

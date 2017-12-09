@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: \left(....\right)
-# contributor: dilan fernando <dilan.fd@gmail.com>
-# key: paren
-# group: math
-# --
-\\left($0\\right)$1
