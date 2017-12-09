@@ -1,0 +1,18 @@
+;; ess-mode configuration (A package for running R in emacs)
+(setq ess-ask-for-ess-directory nil) 
+(setq inferior-R-program-name "/usr/local/bin/R") 
+(setq ess-local-process-name "R") 
+(setq ansi-color-for-comint-mode 'filter) 
+(setq comint-scroll-to-bottom-on-input t) 
+(setq comint-scroll-to-bottom-on-output t) 
+(setq comint-move-point-for-output t)
+(setq ess-eval-visibly-p nil)
+;;makes tab 4 characters wide.
+(setq comint-input-ring-size 1000)
+(setq ess-indent-level 4)
+(setq ess-arg-function-offset 4)
+(setq ess-else-offset 4)
+;; loads the ess-site into emacs.
+;;(require 'ess-site)
+(add-to-list 'load-path "/Users/Dilan/.emacs.d/ess-16.10.2/lisp")
+(load "ess-site")
