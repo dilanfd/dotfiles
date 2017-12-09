@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# contributor: dilan.fd@gmail.com
-# key: dm
-# group: Math
-# name: displaymath \[ ... \]
-# --
-\[
-$1
-\]
