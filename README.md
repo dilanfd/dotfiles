@@ -1,4 +1,5 @@
-**This repository various configuration files**
+**This repository contains various configuration files**
+
 Owner: Dilan Fernando <dilan.fd@gmail.com>
 
 ## Requirements
@@ -29,5 +30,3 @@ fi;
 config checkout
 config config status.showUntrackedFiles no
 ```
-
-
