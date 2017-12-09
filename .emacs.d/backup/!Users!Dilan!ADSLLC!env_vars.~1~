@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# ADS Blockage Prediction API
+# Author/Maintainer:  Dan Redmond - 3/30/2017
+
+# Environment Variables used by Python API
+
+
+## API Server
+############
+
+export ADS_AUTO_SCRUB_API_USERNAME='ADS'
+export ADS_AUTO_SCRUB_API_PASSWORD='test'
+export ADS_AUTO_SCRUB_API_PORT=8000
+export ADS_AUTO_SCRUB_API_RELOADER=True
+export ADS_AUTO_SCRUB_API_DEBUG=True
+
+
+## SQL SETUP
+############
+
+export ADS_DEV_SQL_DRIVER='SQL Server'
+export ADS_DEV_SQL_SERVER='adsdevsql.eastus.cloudapp.azure.com:1433'
+export ADS_DEV_SQL_DATABASE='ADS_Core'
+export ADS_DEV_SQL_UID='dredmond'
+export ADS_DEV_SQL_PWD='pwIDX!sql'
+
+export ADS_PROD_SQL_DRIVER='{ODBC Driver 13 for SQL Server}'
+export ADS_PROD_SQL_SERVER='adscoreprod.database.windows.net,1433'
+export ADS_PROD_SQL_DATABASE='ADSCoreProd'
+export ADS_PROD_SQL_UID='adscore@adscoreprod'
+export ADS_PROD_SQL_PWD='EfW09b9J*2a4'
+
+
+## Classifier
+#############
+
+export ADS_AUTO_SCRUB_API_VERSION='0.0.1'
+export ADS_AUTO_SCRUB_ML_VERSION='0.0.1'
+export ADS_AUTO_SCRUB_MODEL=$HOME'/code/ADS_Auto_Scrub/models/'
+
+
+## Image Generation
+###################
+#
+# export AZURE_ACCOUNT_NAME='adsclouddev6722'
+# export AZURE_ACCOUNT_KEY='StWAIEtdvYr3eXzmUE5mo5bNT+zd8tYnYo8QbcUZonH27fVOGvUxuQqRxbk9jI9f7V5XlnbrA381Oo8Ctc7bBQ=='
+# export IMAGE_CONTAINER='images'
+export AZURE_STORAGE_ACCESS_KEY="LvdxYlkRLFWSt8NDS73NN46JCGrgROM72QywVci3PpAvSxIF5koLHS/SV9Oj/wil32UBEGUH0mZxpiwHXF8tGA=="
+export AZURE_STORAGE_ACCOUNT="adsautoscrub"
