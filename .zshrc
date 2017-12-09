@@ -203,6 +203,7 @@ function make50 { clang -ggdb3 -Wall -Werror "$1".c -o "$1" -I /usr/local/includ
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
 
+alias config='/usr/local/bin/git --git-dir=/Users/Dilan/.myconfig/ --work-tree=/Users/Dilan'
 # the following line must be the last line.
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # source '/Users/Dilan/lib/azure-cli/az.completion'
@@ -211,4 +212,4 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # function gi() { curl -L -s https://www.gitignore.io/api/$@ ;}
 
 
-alias config='/usr/local/bin/git --git-dir=/Users/Dilan/.myconfig/ --work-tree=/Users/Dilan'
+
