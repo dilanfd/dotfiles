@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: multiline-comment
+# key: mcom
+# expand-env: ((yas-indent-line 'fixed))
+# --
+/*
+ * ${1:comline-1}
+ * ${2:comline-2}
+ */
+ $0

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: inline comment
+# key: com
+# expand-env: ((yas-indent-line 'auto))
+# --
+// ${1:comment}$0
