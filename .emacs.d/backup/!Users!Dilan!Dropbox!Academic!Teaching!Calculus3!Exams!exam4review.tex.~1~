@@ -1,0 +1,46 @@
+\documentclass[12pt,a4paper]{exam}
+
+
+%\usepackage[latin1]{inputenc}
+%\usepackage[T1]{fontenc}
+
+\usepackage[parfill]{parskip}
+\usepackage{enumerate}
+
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{pxfonts}
+
+\newcommand{\ds}{\ensuremath{\displaystyle}}
+
+\begin{document}
+\lhead{\bfseries\large Math 2300\\ Exam 4 Review}
+\chead{}
+\rhead{\bfseries\large \quad \\ \quad }
+\headrule
+
+\section*{Instructions}
+\begin{enumerate}[a)]
+%\item You should try to finish each exam in two hours to try to replicate actual testing conditions.
+\item These problems are meant to be for practice only. In particular the actual final will NOT contain any of these problems. Use these as a gauge to identify sections that you need to study more etc.
+\item Solution outlines are also attached separately. Needless to say, you should not look at them before you make a serious attempt at these questions.
+\end{enumerate}
+Good luck!. You are going to need it.\\
+
+\begin{questions}
+
+  \question[5]
+  Evaluate the following integrals.  Simplify your answers where
+  possible. Evaluates the following.
+
+  I just added these.And some more latex.
+
+
+\end{questions}	
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

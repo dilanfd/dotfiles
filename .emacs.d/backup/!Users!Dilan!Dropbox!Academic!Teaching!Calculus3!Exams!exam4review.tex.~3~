@@ -1,0 +1,93 @@
+\documentclass[12pt,a4paper]{exam}
+
+
+%\usepackage[latin1]{inputenc}
+%\usepackage[T1]{fontenc}
+
+\usepackage[parfill]{parskip}
+\usepackage{enumerate}
+
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{pxfonts}
+
+\newcommand{\ds}{\ensuremath{\displaystyle}}
+\newcommand{\bm}{\mathbf}
+\DeclareMathOperator{\curl}{curl}
+\DeclareMathOperator{\flux}{div}
+
+\begin{document}
+\lhead{\bfseries\large Math 2300\\ Exam 4 Review}
+\chead{}
+\rhead{\bfseries\large \quad \\ \quad }
+\headrule
+
+\begin{questions}
+\question
+Let \(\bm F(x,y) = x^2\,\bm i + y^2\,\bm j\).
+\begin{parts}
+\part Show that \(\bm F\) is conservative.
+\part Find a function \(f\) such that \(\nabla f = \bm F\). 
+\part Use part (b) above to Evaluate \[\int_C \bm F \cdot d\bm r\]
+where \(C\) is the arc of the parabola \(y = 2x^2\) from \((-1, 2)\) to \((2,8)\)
+
+
+
+\end{parts}
+
+\question
+Let \(\bm F = e^{-x}\sin y\, \bm i + e^{-y}\sin z\,\bm j + e^{-z}\sin x\, \bm k \).
+\begin{parts}
+  \part Compute \(\flux \bm F\) and \(\curl \bm F\). 
+  \part Is \(\bm F\) Conservative?. Why?
+\end{parts}
+
+
+\question
+Use Green's theorem to evaluate \(\int_C y^4dx + 2xy\, dy\) where \(C\)
+is the ellipse
+\(x^2 + 2y^2 = 2\)
+
+\question
+Let  \(\bm F(x,y,z) = yz\, \bm i + 2xz \,\bm j + e^{xy}\,\bm k\) and  \(C\) be the
+circle \(x^2 + y^2 = 16\) and \(z = 5\). Evaluate 
+
+\[\int_C \bm F \cdot d\bm r\]
+
+Using Stokes' Theorem.
+
+\question
+Use Gauss' Divergence Theorem to find the flux of the field
+\[\bm F = \langle x^4y, -2x^3y^2, z^2 \rangle\] through the solid \(E\)
+where E is defined as:
+
+\[
+E: z = 0, \quad z = 1, \quad x^2 + y^2 = 1
+\]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{questions}	
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

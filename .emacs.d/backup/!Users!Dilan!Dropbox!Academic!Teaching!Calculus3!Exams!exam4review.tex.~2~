@@ -1,0 +1,60 @@
+\documentclass[12pt,a4paper]{exam}
+
+
+%\usepackage[latin1]{inputenc}
+%\usepackage[T1]{fontenc}
+
+\usepackage[parfill]{parskip}
+\usepackage{enumerate}
+
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{pxfonts}
+
+\newcommand{\ds}{\ensuremath{\displaystyle}}
+\newcommand{\bm}{\mathbf}
+\DeclareMathOperator{\curl}{curl}
+\DeclareMathOperator{\flux}{div}
+
+\begin{document}
+\lhead{\bfseries\large Math 2300\\ Exam 4 Review}
+\chead{}
+\rhead{\bfseries\large \quad \\ \quad }
+\headrule
+
+\begin{questions}
+\question
+Let \(\bm F(x,y,z) = e^y \bm i + xe^y\bm j + ye^z\bm k\).
+\begin{parts}
+\part Show that \(\bm F\) is conservative.
+\part Find a function \(f\) such that \(\nabla f = \bm F\). 
+\part Use part part (b) above to Evaluate \(\int_C \bm F \cdot d\bm r\) where
+\(C\) is the line segment \((0,2,0)\) to \((4, 0,3)\)
+\end{parts}
+
+\question
+Let \(\bm F = e^{-x}\sin y \bm i + e^{-y}\sin z\bm j + e^{-z}\sin x \bm k \). Compute \(\flux \bm F\) and \(\curl \bm F\). Is \( \bm F\)
+conservative?. Why?
+
+\question
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{questions}	
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
