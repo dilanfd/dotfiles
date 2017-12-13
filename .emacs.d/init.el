@@ -2,8 +2,35 @@
 (setq user-full-name "Dilan Fernando")
 (setq user-mail-address "dilan.fd@gmail.com")
 
+
+;; use a single key stroke to fire up init file.
+(defun find-user-init-file ()
+  "Edit the `user-init-file', in another window."
+  (interactive)
+  (find-file-other-window user-init-file))
+;; open init file by "C -c I"
+(global-set-key (kbd "C-c I") 'find-user-init-file)
+;; Use a single key stroke to reload init file.
+(defun reload-init-file ()
+  (interactive)
+  (load-file user-init-file))
+(global-set-key (kbd "C-c R") 'reload-init-file) 
+
+;; aggressively indented code. Indented at all times
+;; for the enabled modes. does not work well fo python
+;; unfortunately.
+
+;; if you want to exclude certain modes for example html mode
+;; (add-to-list 'aggressive-indent-excluded-modes 'html-mode)
+
+(add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+(add-hook 'ruby-mode-hook #'aggressive-indent-mode)
+(add-hook 'c-mode-hook #'aggressive-indent-mode)
+(add-hook 'latex-mode-hook #'aggressive-indent-mode)
+
+
 ;; Show date and time on status bar
- (display-time-mode 1)
+(display-time-mode 1)
 
 ;; Set up the customize file to its own separate file,
 ;; instead of saving customize settings in init.el.
@@ -65,8 +92,8 @@
       (push '("\\.text\\'" . markdown-mode) auto-mode-alist)
       (push '("\\.markdown\\'" . markdown-mode) auto-mode-alist)
       (push '("\\.md\\'" . markdown-mode) auto-mode-alist)))
-;; copied from rommel martinez.
 
+;; copied from rommel martinez.
 ;; use smart parenthesis. a popular package. I need
 (require 'smartparens-config)
 ;; we use :add to keep any global handlers. If you want to replace
@@ -302,6 +329,10 @@ ac-source-words-in-same-mode-buffers))  ;self explanatory.
 ;; --------------------------------------
 ;; as for just y/n instead of yes/no.
 (fset 'yes-or-no-p 'y-or-n-p)
+
+;; confirm before killing emacs. helpful
+(when (window-system)
+  (setq confirm-kill-emacs 'yes-or-no-p))
 
 ;;split the windows vertically
 ;;(setq split-width-threshold nil) ;; didn't really work the way I intended. So disabled for now.
