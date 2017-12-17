@@ -25,7 +25,7 @@
 
 (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
 (add-hook 'ruby-mode-hook #'aggressive-indent-mode)
-(add-hook 'c-mode-hook #'aggressive-indent-mode)
+;; (add-hook 'c-mode-hook #'aggressive-indent-mode)
 (add-hook 'latex-mode-hook #'aggressive-indent-mode)
 
 
@@ -262,13 +262,19 @@ ac-source-words-in-same-mode-buffers))  ;self explanatory.
      material-theme
      py-autopep8))
 (mapc #'(lambda (package)
-     (unless (package-installed-p package)
-     (package-install package)))
+          (unless (package-installed-p package)
+            (package-install package)))
       myPackages)
+
+;; Do not warn me about the location of my env vars
+(setq exec-path-from-shell-check-startup-files nil)
+
 ;;making sure shell and eshell do the same thing.
 ;; exports path from the shell to emacs shell etc.
 (when (memq window-system '(mac ns))
-    (exec-path-from-shell-initialize))
+  (exec-path-from-shell-initialize))
+
+
 ;;magit (git) configuration.
 (require 'magit)
 (global-set-key (kbd "C-x g") 'magit-status)
@@ -370,7 +376,7 @@ kept-old-versions 5    ; and how many of the old
 (restore-menu-bar)
 ;; highlights the currently being edited line. better visibility.
 (global-hl-line-mode 1) ;; don't like how it obscures the cursor. disabled for now.
-(set-face-background 'hl-line "#3e4446") ; background face of the current line
+;; (set-face-background 'hl-line "#3e4446") ; background face of the current line
 (set-face-foreground 'highlight nil)     ;keep synatax highlighting in the current line
 
 
