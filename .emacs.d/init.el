@@ -435,9 +435,13 @@ kept-old-versions 5    ; and how many of the old
 
 ;; remaps command to meta (still has alt/option as meta until get used to it) 
 (setq mac-command-modifier 'meta)
-(setq mac-left-option-modifier 'super)    ;left option key is super
-(setq mac-right-option-modifier 'control) ;right option key is ctrl
+;; The following couple of lines are reduntant
+;; (setq mac-left-option-modifier 'super)    ;left option key is super
+;; (setq mac-right-option-modifier 'control) ;right option key is ctrl
 (setq mac-function-modifier 'hyper)     ;make Fn key do hyper
+(setq ns-option-modifier      'super
+      ns-right-option-modifer 'control)
+
 
 ;; ===  Steve Yegge effective emacs stuff. Trying ===
 ;; Following two lines are not bound to anything by default
