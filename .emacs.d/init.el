@@ -86,12 +86,15 @@
 
 ;; configuration for markdown files.
 (use-package markdown-mode
-    :ensure t
-    :config
-    (progn
-      (push '("\\.text\\'" . markdown-mode) auto-mode-alist)
-      (push '("\\.markdown\\'" . markdown-mode) auto-mode-alist)
-      (push '("\\.md\\'" . markdown-mode) auto-mode-alist)))
+  :ensure t
+  :config
+  (progn
+    (push '("\\.text\\'" . markdown-mode) auto-mode-alist)
+    (push '("\\.markdown\\'" . markdown-mode) auto-mode-alist)
+    (push '("\\.md\\'" . markdown-mode) auto-mode-alist)))
+(setq markdown-css-paths `(,(expand-file-name "~/markdown/markdown.css")))
+;; markdown config end
+
 
 ;; copied from rommel martinez.
 ;; use smart parenthesis. a popular package. I need
@@ -443,7 +446,7 @@ kept-old-versions 5    ; and how many of the old
       ns-right-option-modifer 'control)
 
 
-;; ===  Steve Yegge effective emacs stuff. Trying ===
+;; =====================  Steve Yegge =====================================
 ;; Following two lines are not bound to anything by default
 ;; no harm in keeping them.
 (global-set-key "\C-x\C-m" 'execute-extended-command) ; C-x C-m invokes M-x
@@ -458,7 +461,7 @@ kept-old-versions 5    ; and how many of the old
                                         (kill-line 0)))
 (global-set-key "\C-x\C-k" 'kill-region) ; C-x C-k kills region
 (global-set-key "\C-c\C-k" 'kill-region) ; C-c C-k kills region.
-;; ==== Steve Yegge's key bindings end =============
+;; =================== Steve Yegge END =====================================
 
 
 ;; turn on auto fill (lines wrapping at 80 chars
