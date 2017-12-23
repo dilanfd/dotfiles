@@ -25,6 +25,12 @@ alias vim="emacsclient -n"
 
 
 
+############# Nano Config ######################
+export PATH="/usr/local/opt/ncurses/bin:$PATH"
+############ Nano config End ###################
+
+
+
 ################# OH MY ZSH ##################
 # most functions are not used. Pure promt is used
 # insted.
