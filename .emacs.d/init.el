@@ -17,7 +17,7 @@
 (global-set-key (kbd "C-c R") 'reload-init-file) 
 
 ;; aggressively indented code. Indented at all times
-;; for the enabled modes. does not work well fo python
+;; for the enabled modes. does not work well for python
 ;; unfortunately.
 
 ;; if you want to exclude certain modes for example html mode
@@ -42,12 +42,12 @@
 ;; --------------------------------------
 (require 'package)
 (add-to-list 'package-archives
-                    '("melpa" . "https://melpa.org/packages/") t)
+             '("melpa" . "https://melpa.org/packages/") t)
 ;;(add-to-list 'package-archives
 ;;                     '("melpa-stable" . "https://stable.melpa.org/packages/"))
 (when (< emacs-major-version 24)
   ;; For important compatibility libraries like cl-lib
-(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")))
+  (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")))
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 
 (add-to-list 'package-archives
@@ -78,10 +78,17 @@
 (global-set-key (kbd "M-;") 'comment-dwim-2)
 ;; ======== better comments end ================
 
+
+;; =============== C configuration ============================
 ;; tab = 4 spaces. TAB
 (setq-default tab-width 4)
 (setq tab-stop-list (number-sequence 4 200 4))
-;; tab = 4 spaces end. TAB
+;; However this doesn't change tab-width in c-mode.
+;; The following is required to make c-mode indent tab = 4
+(setq-default c-basic-offset 4)
+;; Sets the default c-style to be bsd aka Allman style
+;; (setq c-default-style (cons '(c-mode . "bsd") c-default-style))
+;;=================== C config end ==============================
 
 
 ;; configuration for markdown files.
@@ -96,15 +103,24 @@
 ;; markdown config end
 
 
-;; copied from rommel martinez.
-;; use smart parenthesis. a popular package. I need
-(require 'smartparens-config)
+
+;; use smart-parens mode. Copied from rommel martinez.
+(use-package smartparens-config
+  :ensure smartparens
+  :config
+  (progn
+    (show-smartparens-global-mode t)))
+
+(add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
+(add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
+
 ;; we use :add to keep any global handlers. If you want to replace
 ;; them, simply specify the "bare list" as an argument:
-;; '(my-open-block-c-mode)
+
+
 
 ;; This makes inserting { behave in the c-language way. Very important
-;; after disabling auto-pair mode.
+;; after disabling auto-pair mode. See https://emacs.stackexchange.com/a/3015/13976
 (sp-local-pair 'c-mode "{" nil :post-handlers '(:add my-open-block-c-mode))
 (defun my-open-block-c-mode (id action context)
   (when (eq action 'insert)
@@ -114,7 +130,7 @@
     (previous-line)
     (indent-according-to-mode)))
 
-
+;; The same for c++ mode.
 (sp-local-pair 'c++-mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
 (defun my-create-newline-and-enter-sexp (&rest _ignored)
   "Open a new brace or bracket expression, with relevant newlines and indent. "
@@ -122,7 +138,11 @@
   (indent-according-to-mode)
   (forward-line -1)
   (indent-according-to-mode))
-;; smartparens config end.
+
+;; Key bindings
+(global-set-key (kbd "C-M-k") 'sp-kill-sexp)
+
+;;============== smartparens config end =================
 
 
 ;; ivy-swyper-counsel config ====================
@@ -151,9 +171,9 @@
 ;; (mode-icons-mode)
 
 (use-package ensime
-       :ensure t
-       :pin melpa)
-;;(require 'ess-rutils)
+  :ensure t
+  :pin melpa)
+
 ;; ======================= auto-complete and yasnippet ===========================
 ;; first yasnippet so that it works well with auto-complete.
 (require 'yasnippet)
@@ -171,9 +191,10 @@
 (require 'auto-complete)                ;require auto complete
 (setq ac-dwim t)                        ;do what I mean
 (ac-config-default)                     ;use default configs
-(setq ac-sources '(ac-source-yasnippet  ;tells ac source to use yasnippets.
-ac-source-abbrev
-ac-source-words-in-same-mode-buffers))  ;self explanatory.
+(setq ac-sources '(ac-source-yasnippet ;tells ac source to use
+				   yasnippets.  ac-source-abbrev
+				   ac-source-words-in-same-mode-buffers))
+;self explanatory.
 ;; auto complete only starts on 'TAB' press
 (setq ac-auto-start nil)
 (ac-set-trigger-key "TAB")
@@ -199,46 +220,61 @@ ac-source-words-in-same-mode-buffers))  ;self explanatory.
   (add-to-list 'ac-sources 'ac-source-c-headers))
 
 (add-hook 'c++-mode-hook 'my:ac-c-headers-init)
-(add-hook 'c-mode-hook 'my:ac-c-headers-init)
+(add-hook 'c-mode-hook 'my:ac-c-headers-)
 
 ;; make highlighted selction more readable.
 (set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
+;; (set-face-attribute 'highlight nil :foreground 'unspecified)
+
 
 
 ;;========== yasnippet and autocomplete end =============
 
 ;; NO BACKUP FILES. ANNOYING!!! Use GIT FFS
-(setq make-backup-files nil) ; stop creating ~ files
+(setq make-backup-files nil)
 
 
 ;; enable and use autocomplete globally..
 ;; new company mode. hopefully works well with yasnippet.
-(add-hook 'after-init-hook 'global-company-mode)
-;;(require 'auto-complete)
-;;(ac-config-default)
+;; (add-hook 'after-init-hook 'global-company-mode)
+;; ======= Company mode set up ============
+(use-package company
+  :ensure t
+  :defer t
+  :init (add-hook 'after-init-hook 'global-company-mode)
+  :config
+  (use-package company-irony :ensure t :defer t)
+  (setq company-idle-delay              nil
+		company-minimum-prefix-length   2
+		company-show-numbers            t
+		company-tooltip-limit           20
+		company-dabbrev-downcase        nil
+		company-backends                '((company-irony company-gtags))
+		)
+  :bind ("C-;" . company-complete-common))
+
 
 ;; ============ open smart line above =============
 (defun smart-open-line-above ()
- "Insert an empty line above the current line.
+  "Insert an empty line above the current line.
   Position the cursor at it's beginning, according to the current mode."
-    (interactive)
-    (move-beginning-of-line nil)
-    (newline-and-indent)
-    (forward-line -1)
-    (indent-according-to-mode))
+  (interactive)
+  (move-beginning-of-line nil)
+  (newline-and-indent)
+  (forward-line -1)
+  (indent-according-to-mode))
 
 (global-set-key (kbd "M-o") 'smart-open-line-above)
-;;(global-set-key (kbd "M-O") 'smart-open-line-above)
-;; ============== open smart line above end ============
+;; ============= open smart line above end =============
 
 ;;(define-key ac-mode-map (kbd "TAB") 'auto-complete)
-;;(setq tab-always-indent ‘auto-complete)
+(setq tab-always-indent 'complete)
 
 ;;disable ensime start up notification
 (setq ensime-startup-snapshot-notification 'nil)
 
 ;; use helm
-(require 'helm-config)
+;;(require 'helm-config)
 
 ;; use ENSIME for scala
 (require 'ensime)
@@ -282,9 +318,6 @@ ac-source-words-in-same-mode-buffers))  ;self explanatory.
 (require 'magit)
 (global-set-key (kbd "C-x g") 'magit-status)
 
-;; automatically close open parentheis of any kind.
-;; (require 'autopair) ;; no longer required becuase smartparens installed.
-;; (autopair-global-mode 1)
 
 ;; interactive do mode.
 (require 'ido)
@@ -331,8 +364,6 @@ ac-source-words-in-same-mode-buffers))  ;self explanatory.
 ;; make emacs start up maximized.
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-;; tab always indents.
-;;(setq tab-always-indent ‘complete)
 
 ;; BASIC CUSTOMIZATION
 ;; --------------------------------------
@@ -390,12 +421,10 @@ kept-old-versions 5    ; and how many of the old
 (ido-vertical-mode 1)
 (setq ido-vertical-define-keys 'C-n-and-C-p-only)
 
-;; enabling evil mode and using 'jj' to escape to normal mode.
-;;(require 'evil)
-;;(evil-mode 1)
+
 (require 'key-chord)
 (key-chord-mode 1)
-;;(key-chord-define evil-insert-state-map  "jj" 'evil-normal-state)
+
 
 ;; configuring ace window mode. You can invoke ace-window my doing 'M-p'
 (global-set-key (kbd "M-p") 'ace-window)
@@ -404,6 +433,7 @@ kept-old-versions 5    ; and how many of the old
 ;; --------------------------------------
 ;; automatic 80 character column indicator for python
 (require 'fill-column-indicator)
+(require 'python-mode)
 
 ;; using ipython notebook from inside emacs.
 (require 'ein)
@@ -411,21 +441,29 @@ kept-old-versions 5    ; and how many of the old
 ;; enables elpy
 (elpy-enable)
 ;; when we run our python code (note just ipython) with C-c C-c we
-;; will be presented with the ipython REPL rather than standard
+;; will be presented with the ipython REPL rather than standard python shell
 ;; use ipython as the python shell interpreter.
-(elpy-use-ipython)
+
+;; (elpy-use-python) ;; Commented out for now.
+
 ;; following line fixes the issue of not being able to compile .py file using ipython.
 ;; it used to spit out some garbage without this line. Apparently ipython5 doesn't support
 ;; emacs inferior shell or whatever
-(setq python-shell-interpreter "ipython"
-          python-shell-interpreter-args "--simple-prompt -i")
+
+;; python virtual environment set up
+(setenv "WORKON_HOME" "~/anaconda/envs")
+(pyvenv-mode 1)
+
+(setq python-shell-interpreter "python")
+;; (setq python-shell-interpreter-args "-m IPython --simple-prompt -i")
+
 
 ;;(load custom-file)
 
 ;; use flycheck not flymake with elpy
 (when (require 'flycheck nil t)
-(setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-(add-hook 'elpy-mode-hook 'flycheck-mode))
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
 
 ;; enable autopep8 formatting on save
 (require 'py-autopep8)

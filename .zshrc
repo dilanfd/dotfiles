@@ -13,15 +13,15 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
 
 
-################# EMACS CONFIG #############################
+################# EMACS CONFIG #####################
 export VISUAL=emacsclient
 export EDITOR='emacsclient --alternate-editor='
 export ALTERNATE_EDITOR=""
-alias emacs="open -a /Applications/emacs.app $1"
+alias em="emacs $1"
 # returns the prompt w/out waiting.
 alias ec="emacsclient -n" # -n stands for --no-wait. 
 alias vim="emacsclient -n"
-################ EMACS CONFIG END ##########################
+################ EMACS CONFIG END ##################
 
 
 
