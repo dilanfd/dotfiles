@@ -12,9 +12,10 @@
 (global-set-key (kbd "C-c I") 'find-user-init-file)
 ;; Use a single key stroke to reload init file.
 (defun reload-init-file ()
+  "Reload the `user-init-file'"
   (interactive)
   (load-file user-init-file))
-(global-set-key (kbd "C-c R") 'reload-init-file) 
+(global-set-key (kbd "C-c R") 'reload-init-file)
 
 ;; aggressively indented code. Indented at all times
 ;; for the enabled modes. does not work well for python
@@ -43,8 +44,6 @@
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
-;;(add-to-list 'package-archives
-;;                     '("melpa-stable" . "https://stable.melpa.org/packages/"))
 (when (< emacs-major-version 24)
   ;; For important compatibility libraries like cl-lib
   (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")))
@@ -133,7 +132,7 @@
 ;; The same for c++ mode.
 (sp-local-pair 'c++-mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
 (defun my-create-newline-and-enter-sexp (&rest _ignored)
-  "Open a new brace or bracket expression, with relevant newlines and indent. "
+  "Open a new brace or bracket expression, with relevant newlines and indent."
   (newline)
   (indent-according-to-mode)
   (forward-line -1)
@@ -145,26 +144,37 @@
 ;;============== smartparens config end =================
 
 
-;; ivy-swyper-counsel config ====================
-(ivy-mode 1)
-(setq ivy-use-virtual-buffers t)
-(setq enable-recursive-minibuffers t)
-(global-set-key "\C-s" 'swiper)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
-;;(global-set-key (kbd "<f6>") 'ivy-resume)
-(global-set-key (kbd "M-x") 'counsel-M-x) 
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-;;(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-;;(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-;;(global-set-key (kbd "<f1> l") 'counsel-find-library)
-;;(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-;;(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-;;(global-set-key (kbd "C-c g") 'counsel-git)
-;;(global-set-key (kbd "C-c j") 'counsel-git-grep)
-;;(global-set-key (kbd "C-c k") 'counsel-ag)
-;;(global-set-key (kbd "C-x l") 'counsel-locate)
-;;(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-;;(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+;; =============== ivy-swyper-counsel config ====================
+(use-package ivy
+  :ensure t
+  :config
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
+  (global-set-key (kbd "C-c C-r") 'ivy-resume)
+  (global-set-key (kbd "<f6>") 'ivy-resume))
+
+(use-package swiper
+  :ensure t
+  :config
+  (global-set-key "\C-s" 'swiper))
+
+(use-package counsel
+  :ensure t
+  :config
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  (global-set-key (kbd "<f1> l") 'counsel-find-library)
+  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+  (global-set-key (kbd "C-c g") 'counsel-git)
+  (global-set-key (kbd "C-c j") 'counsel-git-grep)
+  (global-set-key (kbd "C-c k") 'counsel-ag)
+  (global-set-key (kbd "C-x l") 'counsel-locate)
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
+
 ;;================ ivy-swyper-counsel config end =================
 
 ;; show nice mode icons for git branch etc.
@@ -198,21 +208,6 @@
 ;; auto complete only starts on 'TAB' press
 (setq ac-auto-start nil)
 (ac-set-trigger-key "TAB")
-
-;; auto-complete settings
-;; auto-complete is required by
-;; jedi so can't uninstall.
-;; (require 'auto-complete-config)
-;; (ac-config-default)
-;;; set the trigger key so thta together with yasnippet on tab key
-;;; if the word exists in yasnippet, pressing tab will cause yasnippet to
-;;; activate, otherwise, auto-complete will
-;; (ac-set-trigger-key "TAB")
-;; (ac-set-trigger-key "<tab>")
-;; (setq-default ac-sources (push 'ac-source-yasnippet ac-sources))
-
-;; enable global auto-complete mode.
-;; (global-auto-complete-mode t)
 
 ;; C auto-complete configuration.
 (defun my:ac-c-headers-init ()
@@ -282,11 +277,15 @@
 
 ;; Setting up Expand Region. Selecting word, paragraph, function
 ;; etc quicker.
-(require 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
+;; (require 'expand-region)
+;; (global-set-key (kbd "C-=") 'er/expand-region)
+(use-package expand-region
+  :ensure t
+  :bind ("C-=" . er/expand-region))
+
 
 (when (not package-archive-contents)
-(package-refresh-contents))
+  (package-refresh-contents))
 ;; set default font and size.
 
 (set-frame-font "Monaco-16" nil t)
@@ -305,37 +304,44 @@
             (package-install package)))
       myPackages)
 
-;; Do not warn me about the location of my env vars
-(setq exec-path-from-shell-check-startup-files nil)
+(use-package flycheck
+  :ensure t
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
+
+
 
 ;;making sure shell and eshell do the same thing.
 ;; exports path from the shell to emacs shell etc.
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  ;;Do not warn me about the location of my env vars
+  (setq exec-path-from-shell-check-startup-files nil)
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-initialize)))
 
 
 ;;magit (git) configuration.
-(require 'magit)
-(global-set-key (kbd "C-x g") 'magit-status)
+;; (require 'magit)
+;; (global-set-key (kbd "C-x g") 'magit-status)
+(use-package magit
+  :ensure t
+  :bind (("C-x g" . magit-status)))
 
 
 ;; interactive do mode.
 (require 'ido)
 (ido-mode t)
 
-;;powerline mode.
-;;(require 'powerline)
-;;(powerline-default-theme)
-;; the famous spaceline status bar for emacs
-;;(require 'spaceline-config)
-;;(spaceline-spacemacs-theme)
+
 ;; Start emacs infront of terminal.
 (x-focus-frame nil)
 
 
 ;; python-jedi mode. Helps with python autocompletion etc.
 (add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:setup-keys t)                     
+(setq jedi:setup-keys t)
 (setq jedi:complete-on-dot t)                 ; optional
 
 ;; make sure all backup files live in only one place.
@@ -343,11 +349,16 @@
 
 ;;enabling which key mode. (Gives a drop down of available keys after C-x
 ;; if you don't remember the key combination.
-(which-key-mode t)
+;; (which-key-mode t)
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode +1))
+
 
 ;; enabling exec-path-from-shell. (fixes an issue about exporting path for flycheck)
 (when (memq window-system '(mac ns))
-    (exec-path-from-shell-initialize))
+  (exec-path-from-shell-initialize))
 
 ;; Invoking yasnippet.
 (require 'yasnippet)
@@ -421,10 +432,14 @@ kept-old-versions 5    ; and how many of the old
 (ido-vertical-mode 1)
 (setq ido-vertical-define-keys 'C-n-and-C-p-only)
 
-
-(require 'key-chord)
-(key-chord-mode 1)
-
+;; Use key-chord mode.
+;; (require 'key-chord)
+;; (key-chord-mode 1)
+(use-package key-chord
+  :ensure t
+  :config
+  (key-chord-mode +1)
+  :commands key-chord-mode)
 
 ;; configuring ace window mode. You can invoke ace-window my doing 'M-p'
 (global-set-key (kbd "M-p") 'ace-window)
@@ -452,6 +467,8 @@ kept-old-versions 5    ; and how many of the old
 
 ;; python virtual environment set up
 (setenv "WORKON_HOME" "~/anaconda/envs")
+
+(use-package pyvenv)
 (pyvenv-mode 1)
 
 (setq python-shell-interpreter "python")
@@ -470,7 +487,11 @@ kept-old-versions 5    ; and how many of the old
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 
 ;; gotta see matching parenthesis.
-(show-paren-mode t)
+;; (show-paren-mode t)
+(use-package paren
+  :config
+  (show-paren-mode +1))
+
 ;; make sure all backup files live in one directory.
 
 
@@ -510,10 +531,10 @@ kept-old-versions 5    ; and how many of the old
 ;; system clipboard and so we can all get along with the Mac OS X in general..
 (delete-selection-mode t)
 (transient-mark-mode t)
-(setq x-select-enable-clipboard t)
+(setq select-enable-clipboard t)
 
 ;; Always highlight parenthesis. You can actually go insane without this.
-(show-paren-mode t)
+;; (show-paren-mode t)
 
 ;; Custom themes load path.
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
@@ -531,26 +552,4 @@ kept-old-versions 5    ; and how many of the old
 ;; loading the key-bindings init file
 (load-file "~/.emacs.d/custom_init/keyBindings.el")
 
-;; init.el ends here. the rest of the stuff gets added automatically..
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(TeX-source-correlate-mode t)
- '(custom-safe-themes
-   (quote
-    ("38e64ea9b3a5e512ae9547063ee491c20bd717fe59d9c12219a0b1050b439cdd" "28130127bbf3072c1bbc7652fca7245f186bb417b3b385a5e4da57b895ffe9d8" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" "32e3693cd7610599c59997fee36a68e7dd34f21db312a13ff8c7e738675b6dfc" "93fdf264bc14b42d0d1d25dacf932f09850e812395400d76d9c67ba18541ce9b" "98cc377af705c0f2133bb6d340bf0becd08944a588804ee655809da5d8140de6" "4e753673a37c71b07e3026be75dc6af3efbac5ce335f3707b7d6a110ecb636a3" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" default)))
- '(eshell-output-filter-functions
-   (quote
-    (eshell-handle-control-codes eshell-handle-ansi-color eshell-watch-for-password-prompt)))
- '(package-selected-packages
-   (quote
-    (comment-dwim-2 neotree projectile auctex-latexmk cyberpunk-theme monokai-theme spacemacs-theme company-shell company-dict company-anaconda company-auctex company markdown-mode ensime transpose-frame color-theme-sanityinc-solarized color-theme-sanityinc-tomorrow moe-theme latex-preview-pane zerodark-theme spaceline zenburn-theme auctex matlab-mode color-theme-solarized evil-visual-mark-mode powerline exec-path-from-shell rope-read-mode jedi py-autopep8 material-theme autopair flycheck magit elpy ein better-defaults)))
- '(send-mail-function (quote mailclient-send-it)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;; =========== init.el ends here ====================
