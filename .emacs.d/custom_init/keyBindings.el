@@ -1,8 +1,8 @@
-;; Useing the super key (Command key on a Mac) to some good use.
-;; all thanks to Bodizhar Batsov
+;;; Useing the super key (Command key on a Mac) to some good use.
+;;; all thanks to Bodizhar Batsov
 ;;(define-key global-map [?\s-d] 'projectile-find-dir)
 (define-key global-map [?\s-e] 'er/expand-region)
-(define-key global-map [?\s-f] 'find-file)
+;; (define-key global-map [?\s-f] 'find-file)
 ;;(define-key global-map [?\s-g] 'projectile-grep)
 ;;(define-key global-map [?\s-j] 'prelude-top-join-line)
 (define-key global-map [?\s-k] 'kill-whole-line)

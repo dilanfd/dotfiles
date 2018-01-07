@@ -190,6 +190,6 @@ alias config='/usr/local/bin/git --git-dir=/Users/Dilan/.myconfig/ --work-tree=/
 
 
 ################# SYNTAX HIGHLIGHTING for ZSH ##################### 
-# THIS MUST BE the last line
+# THIS MUST BE THE LAST LINE
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ################ SYNTAX HIGHLIGHTING FOR ZSH END ##################

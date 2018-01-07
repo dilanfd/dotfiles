@@ -1,4 +1,4 @@
-;; ess-mode configuration (A package for running R in emacs)
+;;; ess-mode configuration (A package for running R in emacs)
 (setq ess-ask-for-ess-directory nil) 
 (setq inferior-R-program-name "/usr/local/bin/R") 
 (setq ess-local-process-name "R") 

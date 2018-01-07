@@ -1,4 +1,5 @@
-;; init.el --- Emacs configuration of Dilan Fernando
+;; init.el --- Emacs configuration
+;; Last modified Jan. 7, 2018.
 (setq user-full-name "Dilan Fernando")
 (setq user-mail-address "dilan.fd@gmail.com")
 
@@ -77,6 +78,15 @@
 (global-set-key (kbd "M-;") 'comment-dwim-2)
 ;; ======== better comments end ================
 
+;; ============= DIRED ===============
+(use-package dired+
+  :ensure t
+  :config (require 'dired+)
+  )
+;; ============ DIRED end =============
+
+
+
 
 ;; =============== C configuration ============================
 ;; tab = 4 spaces. TAB
@@ -100,6 +110,23 @@
     (push '("\\.md\\'" . markdown-mode) auto-mode-alist)))
 (setq markdown-css-paths `(,(expand-file-name "~/markdown/markdown.css")))
 ;; markdown config end
+
+
+
+;;  ============= HTML CSS Web Mode ==================
+(use-package web-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (setq web-mode-engines-alist
+		'(("django"    . "\\.html\\'")))
+  (setq web-mode-ac-sources-alist
+		'(("css" . (ac-source-css-property))
+		  ("html" . (ac-source-words-in-buffer ac-source-abbrev))))
+
+  (setq web-mode-enable-auto-closing t)
+  (setq web-mode-enable-auto-quoting t))
+;; ============== Web mode end ============
 
 
 
@@ -177,18 +204,25 @@
 
 ;;================ ivy-swyper-counsel config end =================
 
-;; show nice mode icons for git branch etc.
-;; (mode-icons-mode)
-
+;; ======= Ensime/Scala config =============
 (use-package ensime
   :ensure t
-  :pin melpa)
+  :pin melpa
+  :config
+  (setq ensime-startup-snapshot-notification 'nil)
+  (add-hook 'scala-mode-hook 'ensime-scala-mode-hook))
+;; ========= Ensime end ====================
 
-;; ======================= auto-complete and yasnippet ===========================
+;; ==== auto-complete and yasnippet ==========
 ;; first yasnippet so that it works well with auto-complete.
-(require 'yasnippet)
-(yas-global-mode 1)
-(setq yas-triggers-in-field t)          ;snippet inside snippet trigger
+(use-package yasnippet
+  :ensure t
+  :init
+  (yas-global-mode 1)
+  :config
+  (setq yas-triggers-in-field t)) ;snippet inside snippet trigger
+
+
 ;;===========yas expand using C-TAB ===========
 ;; there will be no conflicts with indent-according-to-mode
 ;; and jedi and other auto completion stuff. Nice workaround.
@@ -198,16 +232,19 @@
 ;; ========== yasnippts end =================
 
 ;;============ Auto Complte settings =============
-(require 'auto-complete)                ;require auto complete
-(setq ac-dwim t)                        ;do what I mean
-(ac-config-default)                     ;use default configs
-(setq ac-sources '(ac-source-yasnippet ;tells ac source to use
-				   yasnippets.  ac-source-abbrev
-				   ac-source-words-in-same-mode-buffers))
-;self explanatory.
-;; auto complete only starts on 'TAB' press
-(setq ac-auto-start nil)
-(ac-set-trigger-key "TAB")
+(use-package auto-complete
+  :ensure t
+  :init
+  (progn
+    (ac-config-default))
+  :config
+  (setq ac-dwim t)
+  (setq ac-sources '(ac-source-yasnippet
+					 ac-source-abbrev
+					 ac-source-words-in-same-mode-buffers))
+  (setq ac-auto-start nil)
+  :bind ("TAB" . ac-set-trigger-key))
+;; ========== Auto Complete Settings end ===========
 
 ;; C auto-complete configuration.
 (defun my:ac-c-headers-init ()
@@ -216,22 +253,20 @@
 
 (add-hook 'c++-mode-hook 'my:ac-c-headers-init)
 (add-hook 'c-mode-hook 'my:ac-c-headers-)
+;;========== yasnippet and autocomplete end =============
+
+
 
 ;; make highlighted selction more readable.
 (set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
-;; (set-face-attribute 'highlight nil :foreground 'unspecified)
 
 
-
-;;========== yasnippet and autocomplete end =============
 
 ;; NO BACKUP FILES. ANNOYING!!! Use GIT FFS
 (setq make-backup-files nil)
 
 
 ;; enable and use autocomplete globally..
-;; new company mode. hopefully works well with yasnippet.
-;; (add-hook 'after-init-hook 'global-company-mode)
 ;; ======= Company mode set up ============
 (use-package company
   :ensure t
@@ -265,15 +300,6 @@
 ;;(define-key ac-mode-map (kbd "TAB") 'auto-complete)
 (setq tab-always-indent 'complete)
 
-;;disable ensime start up notification
-(setq ensime-startup-snapshot-notification 'nil)
-
-;; use helm
-;;(require 'helm-config)
-
-;; use ENSIME for scala
-(require 'ensime)
-(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 ;; Setting up Expand Region. Selecting word, paragraph, function
 ;; etc quicker.
@@ -413,10 +439,10 @@ kept-old-versions 5    ; and how many of the old
 
 ;; this line of code restores the menu bar and tool bar back.
 (defun restore-menu-bar()
-    (interactive)
-    (if (fboundp 'scroll-bar-mode) (scroll-bar-mode 1))
-    (if (fboundp 'tool-bar-mode) (tool-bar-mode 1))
-    (if (fboundp 'menu-bar-mode) (menu-bar-mode 1)))
+  (interactive)
+  (if (fboundp 'scroll-bar-mode) (scroll-bar-mode 1))
+  (if (fboundp 'tool-bar-mode) (tool-bar-mode -1)) ; turned off tool bar.
+  (if (fboundp 'menu-bar-mode) (menu-bar-mode 1)))
 
 (restore-menu-bar)
 ;; highlights the currently being edited line. better visibility.
@@ -442,7 +468,12 @@ kept-old-versions 5    ; and how many of the old
   :commands key-chord-mode)
 
 ;; configuring ace window mode. You can invoke ace-window my doing 'M-p'
-(global-set-key (kbd "M-p") 'ace-window)
+;; (global-set-key (kbd "M-p") (interactive) (ace-window))
+(use-package ace-window
+  :ensure t
+  :config
+  (global-set-key (kbd "M-p") 'ace-window))
+
 
 ;; PYTHON CONFIGURATION
 ;; --------------------------------------
