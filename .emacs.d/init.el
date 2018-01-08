@@ -81,8 +81,7 @@
 ;; ============= DIRED ===============
 (use-package dired+
   :ensure t
-  :config (require 'dired+)
-  )
+  :config (require 'dired+))
 ;; ============ DIRED end =============
 
 
@@ -236,30 +235,32 @@
   :ensure t
   :init
   (progn
-    (ac-config-default))
+	(ac-config-default))
   :config
-  (setq ac-dwim t)
-  (setq ac-sources '(ac-source-yasnippet
-					 ac-source-abbrev
-					 ac-source-words-in-same-mode-buffers))
-  (setq ac-auto-start nil)
-  :bind ("TAB" . ac-set-trigger-key))
+  (progn
+	(setq ac-dwim t)
+	(add-to-list 'ac-modes 'latex-mode)
+	(setq ac-sources '(ac-source-yasnippet
+					   ac-source-abbrev
+					   ac-source-words-in-same-mode-buffers))
+	(setq ac-auto-start nil)
+	(ac-set-trigger-key "TAB")))
+
+
 ;; ========== Auto Complete Settings end ===========
 
-;; C auto-complete configuration.
-(defun my:ac-c-headers-init ()
-  (require 'auto-complete-c-headers)
-  (add-to-list 'ac-sources 'ac-source-c-headers))
+;; ;; C auto-complete configuration.
+;; (defun my:ac-c-headers-init ()
+;;   (require 'ac-c-headers)
+;;   (add-to-list 'ac-sources 'ac-source-c-headers)
+;;   (add-to-list 'achead:include-directories  '"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"))
 
-(add-hook 'c++-mode-hook 'my:ac-c-headers-init)
-(add-hook 'c-mode-hook 'my:ac-c-headers-)
-;;========== yasnippet and autocomplete end =============
-
-
+;; (add-hook 'c++-mode-hook 'my:ac-c-headers-init)
+;; (add-hook 'c-mode-hook 'my:ac-c-headers-)
+;; ;; ;;========== yasnippet and autocomplete end =============
 
 ;; make highlighted selction more readable.
 (set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
-
 
 
 ;; NO BACKUP FILES. ANNOYING!!! Use GIT FFS
@@ -274,6 +275,11 @@
   :init (add-hook 'after-init-hook 'global-company-mode)
   :config
   (use-package company-irony :ensure t :defer t)
+  (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
+  (define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
+  (define-key company-active-map (kbd "S-TAB") 'company-select-previous)
+  (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
+  (setq company-require-match 'never)
   (setq company-idle-delay              nil
 		company-minimum-prefix-length   2
 		company-show-numbers            t
@@ -282,6 +288,15 @@
 		company-backends                '((company-irony company-gtags))
 		)
   :bind ("C-;" . company-complete-common))
+
+
+;; ========= company c headers configuration =======
+(require 'company-c-headers)
+(add-to-list 'company-backends 'company-c-headers)
+(add-to-list 'company-c-headers-path-system "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1")
+
+(add-hook 'c++-mode-hook 'company-mode)
+(add-hook 'c-mode-hook 'company-mode)
 
 
 ;; ============ open smart line above =============
