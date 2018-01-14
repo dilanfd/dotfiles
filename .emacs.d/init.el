@@ -511,11 +511,18 @@ kept-old-versions 5    ; and how many of the old
 ;; it used to spit out some garbage without this line. Apparently ipython5 doesn't support
 ;; emacs inferior shell or whatever
 
+;; Anaconda mode.
+(add-hook 'python-mode-hook 'anaconda-mode)
+
+
 ;; python virtual environment set up
 (setenv "WORKON_HOME" "~/anaconda/envs")
 
-(use-package pyvenv)
-(pyvenv-mode 1)
+(use-package pyvenv
+  :ensure t
+  :config
+  (pyvenv-mode 1))
+
 
 (setq python-shell-interpreter "python")
 ;; (setq python-shell-interpreter-args "-m IPython --simple-prompt -i")
