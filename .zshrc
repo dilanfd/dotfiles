@@ -49,6 +49,13 @@ export PKG_CONFIG_PATH="/usr/local/opt/openssl/lib/pkgconfig"
 ################### ENV VAR END ################################
 
 
+################ GO LANG CONFIG #######################
+export GOPATH=$HOME/Go
+export GOROOT=/usr/local/opt/go/libexec
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOROOT/bin
+############### END GO LANG CONFIG ####################
+
 
 ###################### PURE PROMPT CONFIG #####################
 # configuration for the minimalistic pure prompt.
