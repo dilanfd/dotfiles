@@ -86,7 +86,6 @@
 
 
 
-
 ;; =============== C configuration ============================
 ;; tab = 4 spaces. TAB
 (setq-default tab-width 4)
@@ -97,6 +96,9 @@
 ;; Sets the default c-style to be bsd aka Allman style
 ;; (setq c-default-style (cons '(c-mode . "bsd") c-default-style))
 ;;=================== C config end ==============================
+
+
+
 
 
 ;; configuration for markdown files.
@@ -187,6 +189,10 @@
 
 (use-package counsel
   :ensure t
+  :bind
+  (("M-y" . counsel-yank-pop)
+   :map ivy-minibuffer-map
+   ("M-y" . ivy-next-line))
   :config
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
@@ -202,6 +208,12 @@
   (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
 
 ;;================ ivy-swyper-counsel config end =================
+
+;; auto revert changed buffers using <f5>
+(global-auto-revert-mode 1)
+(setq auto-revert-verbose 'nil)
+(global-set-key (kbd "<f5>") 'revert-buffer)
+;; auto revert end ======================
 
 ;; ======= Ensime/Scala config =============
 (use-package ensime
@@ -445,11 +457,16 @@ kept-old-versions 5    ; and how many of the old
 
 
 
-
+;;; Global Set up. Theme etc.
 (setq inhibit-startup-message t) ;; hide the startup message
+;; atom-one-dark-theme
+;; (load-theme 'atom-one-dark t)
+;; sanity inc steve purcell theme
 (load-theme 'sanityinc-tomorrow-eighties t) ;load tomorrow night theme
-(global-linum-mode t) ;; enable line numbers globally
-(setq column-number-mode t) ;; enable column numbers
+;; enable line numbers globally
+(global-linum-mode t) 
+;; enable column numbers
+(setq column-number-mode t)
 
 
 ;; this line of code restores the menu bar and tool bar back.
@@ -601,8 +618,12 @@ kept-old-versions 5    ; and how many of the old
 ;; loading the matlab configuration.
 (load-file "~/.emacs.d/custom_init/matlabConfig.el")
 
+;; loading iBuffer configuration file.
+(load-file "~/.emacs.d/custom_init/iBufferConfig.el")
 
 ;; loading the key-bindings init file
 (load-file "~/.emacs.d/custom_init/keyBindings.el")
 
+;; loading the go lang init file
+(load-file "~/.emacs.d/custom_init/goConfig.el")
 ;; =========== init.el ends here ====================
