@@ -64,6 +64,8 @@ export PATH=$PATH:$GOROOT/bin
 autoload -Uz promptinit
 promptinit
 prompt pure
+PURE_PROMPT_SYMBOL="λ"
+
 
 # colored completion - use my LS_COLORS
 # zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}

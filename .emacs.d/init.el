@@ -101,16 +101,17 @@
 
 
 
-;; configuration for markdown files.
+;; ======== configuration for markdown files =============
 (use-package markdown-mode
   :ensure t
   :config
+  (setq markdown-css-paths `(,(expand-file-name "~/markdown/markdown.css")))
+  (add-hook 'markdown-mode-hook 'flyspell-mode)
   (progn
     (push '("\\.text\\'" . markdown-mode) auto-mode-alist)
     (push '("\\.markdown\\'" . markdown-mode) auto-mode-alist)
     (push '("\\.md\\'" . markdown-mode) auto-mode-alist)))
-(setq markdown-css-paths `(,(expand-file-name "~/markdown/markdown.css")))
-;; markdown config end
+;;============  markdown config end ====================
 
 
 
@@ -205,7 +206,12 @@
   (global-set-key (kbd "C-c j") 'counsel-git-grep)
   (global-set-key (kbd "C-c k") 'counsel-ag)
   (global-set-key (kbd "C-x l") 'counsel-locate)
-  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+  ;; Use C-j for immediate termination with the current value, and RET
+  ;; for continuing completion for that directory. This is the ido
+  ;; behaviour.
+  (define-key ivy-minibuffer-map (kbd "C-j") #'ivy-immediate-done)
+  (define-key ivy-minibuffer-map (kbd "RET") #'ivy-alt-done))
 
 ;;================ ivy-swyper-counsel config end =================
 
