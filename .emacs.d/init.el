@@ -48,7 +48,7 @@
 (when (< emacs-major-version 24)
   ;; For important compatibility libraries like cl-lib
   (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")))
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
 (add-to-list 'package-archives
                     '("marmalade" . "http://marmalade-repo.org/packages/") t)
@@ -85,6 +85,24 @@
 ;; ============ DIRED end =============
 
 
+;; =========== direfl ============
+;; gives colors to dired mode when in sanityinc theme.
+(use-package diredfl                    ; Add colours to Dired
+  :ensure t
+  :config (diredfl-global-mode))
+;; ========= diredfl end ==============
+
+
+;; ======== Atomic - chrome. (edit gmail in emacs.) =========
+(use-package atomic-chrome
+  :ensure t
+  :config
+  (atomic-chrome-start-server)
+  (setq atomic-chrome-buffer-open-style 'frame)
+  (setq atomic-chrome-default-major-mode 'markdown-mode))
+;; ========== Atomic - chrome end ==============
+
+
 
 ;; =============== C configuration ============================
 ;; tab = 4 spaces. TAB
@@ -107,6 +125,7 @@
   :config
   (setq markdown-css-paths `(,(expand-file-name "~/markdown/markdown.css")))
   (add-hook 'markdown-mode-hook 'flyspell-mode)
+  (add-hook 'markdown-mode-hook 'auto-fill-mode)
   (progn
     (push '("\\.text\\'" . markdown-mode) auto-mode-alist)
     (push '("\\.markdown\\'" . markdown-mode) auto-mode-alist)
@@ -171,6 +190,32 @@
 (global-set-key (kbd "C-M-k") 'sp-kill-sexp)
 
 ;;============== smartparens config end =================
+
+
+;;;; ========= Org mode configuration ===============
+;; Enable Org mode
+(use-package org
+  :ensure t
+  :config
+  ;; Make Org mode work with files ending in .org
+  (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+  (setq org-todo-keywords
+		'((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
+  (setq org-src-tab-acts-natively t)
+  (add-hook 'markdown-mode-hook 'auto-fill-mode)
+  ;;; from David O'toole org tutorial.
+  (define-key global-map "\C-cl" 'org-store-link)
+  (define-key global-map "\C-ca" 'org-agenda)
+  (setq org-log-done t)
+  )
+;; The above is the default in recent emacsen
+
+;;; ========== Org bullets. ================
+(use-package org-bullets
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+;;; =========== org bullets end ============
 
 
 ;; =============== ivy-swyper-counsel config ====================
@@ -247,6 +292,14 @@
 ;; (define-key yas-minor-mode-map (kbd "TAB") nil)
 ;; (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand)
 ;; ========== yasnippts end =================
+
+;;; ========== multiple cursors ==================
+(use-package multiple-cursors
+  :ensure t
+  :bind (("M-." . mc/mark-next-like-this)
+         ("M-," . mc/unmark-next-like-this)
+         ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
+;; ======== multiple cursors end ================
 
 ;;============ Auto Complte settings =============
 (use-package auto-complete
@@ -561,6 +614,7 @@ kept-old-versions 5    ; and how many of the old
 ;; enable autopep8 formatting on save
 (require 'py-autopep8)
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+(setq py-autopep8-options '("--max-line-length=100"))
 
 ;; gotta see matching parenthesis.
 ;; (show-paren-mode t)
