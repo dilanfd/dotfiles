@@ -81,7 +81,11 @@
 ;; ============= DIRED ===============
 (use-package dired+
   :ensure t
-  :config (require 'dired+))
+  :config
+  (require 'dired+)
+  (add-hook 'dired-mode-hook   (lambda nil (auto-revert-mode 1)))
+  ;; (add-hook 'wdired-mode-hook (lambda nil (auto-revert-mode 1)))﻿
+  )
 ;; ============ DIRED end =============
 
 
@@ -217,6 +221,24 @@
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 ;;; =========== org bullets end ============
 
+;;; ============ HELM CONFIG ===============
+(use-package helm
+  :ensure t
+  :config
+  (require 'helm-config)
+  (setq helm-M-x-fuzzy-match t)
+  (setq helm-buffers-fuzzy-matching t
+        helm-recentf-fuzzy-match t)
+  (set-face-attribute 'helm-selection nil 
+					  :background "yellow"
+					  :foreground "black")
+  :bind
+  ("M-y" . helm-show-kill-ring)
+  ("C-x b" . helm-mini)
+  ("M-x" . helm-M-x)
+  ("C-x C-f" . helm-find-files))
+;;; ============ HELM END ==================
+
 
 ;; =============== ivy-swyper-counsel config ====================
 (use-package ivy
@@ -230,18 +252,18 @@
 
 (use-package swiper
   :ensure t
-  :config
-  (global-set-key "\C-s" 'swiper))
+  :bind
+  ("C-s" . swiper))
 
 (use-package counsel
   :ensure t
   :bind
-  (("M-y" . counsel-yank-pop)
-   :map ivy-minibuffer-map
-   ("M-y" . ivy-next-line))
+  ;; (("M-y" . counsel-yank-pop)			;also browses kill ring.
+  ;;  :map ivy-minibuffer-map ;; these are set by helm.
+  ;;  ("M-y" . ivy-next-line))
   :config
-  (global-set-key (kbd "M-x") 'counsel-M-x)
-  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  ;; (global-set-key (kbd "M-x") 'counsel-M-x)
+  ;; (global-set-key (kbd "C-x C-f") 'counsel-find-file)
   (global-set-key (kbd "<f1> f") 'counsel-describe-function)
   (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
   (global-set-key (kbd "<f1> l") 'counsel-find-library)
@@ -686,4 +708,7 @@ kept-old-versions 5    ; and how many of the old
 
 ;; loading the go lang init file
 (load-file "~/.emacs.d/custom_init/goConfig.el")
+
+;; loading sql config file
+(load-file "~/.emacs.d/custom_init/sqlConfig.el")
 ;; =========== init.el ends here ====================
