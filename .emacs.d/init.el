@@ -1,5 +1,7 @@
-;; init.el --- Emacs configuration
-;; Last modified Jan. 7, 2018.
+;; init.el --- Emacs configuration for Dilan Fernando.
+;; Last modified : Let's face it. Probably a few seconds ago... :)
+;; I like incessantly fiddling with the config files. ha.
+
 (setq user-full-name "Dilan Fernando")
 (setq user-mail-address "dilan.fd@gmail.com")
 
@@ -202,17 +204,25 @@
   :ensure t
   :config
   ;; Make Org mode work with files ending in .org
-  (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+  (transient-mark-mode 1)
+  (add-to-list 'auto-mode-alist '("\\.org$" . org-mode)) 
   (setq org-todo-keywords
-		'((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
-  (setq org-src-tab-acts-natively t)
+		'((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE"))) 
+  (setq org-src-fontify-natively t
+		org-src-tab-acts-natively t
+		org-src-preserve-indentation t)
+  (add-hook 'org-mode-hook 'flyspell-mode)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)))
   (add-hook 'markdown-mode-hook 'auto-fill-mode)
   ;;; from David O'toole org tutorial.
   (define-key global-map "\C-cl" 'org-store-link)
   (define-key global-map "\C-ca" 'org-agenda)
-  (setq org-log-done t)
-  )
+  (setq org-log-done t))
 ;; The above is the default in recent emacsen
+
+
 
 ;;; ========== Org bullets. ================
 (use-package org-bullets
@@ -675,14 +685,12 @@ kept-old-versions 5    ; and how many of the old
 ;; =================== Steve Yegge END =====================================
 
 
-;; turn on auto fill (lines wrapping at 80 chars
-;; for better visibility when inside the latex mode.
-(add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
 
-;; make sure emacs has copy paste etc work as you would expect. Make emacs respond to
-;; system clipboard and so we can all get along with the Mac OS X in general..
+;; make sure emacs has copy paste etc work as you would expect. Make
+;; emacs respond to system clipboard and so we can all get along with
+;; the Mac OS X in general..
 (delete-selection-mode t)
-(transient-mark-mode t)
+;; (transient-mark-mode t)
 (setq select-enable-clipboard t)
 
 ;; Always highlight parenthesis. You can actually go insane without this.
