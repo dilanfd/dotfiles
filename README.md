@@ -1,4 +1,4 @@
-**This repository contains various configuration files**
+**This repository contains various config files**
 
 Owner: Dilan Fernando <dilan.fd@gmail.com>
 
