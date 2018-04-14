@@ -214,13 +214,19 @@
   (add-hook 'org-mode-hook 'flyspell-mode)
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((python . t)))
+   '((python . t)
+	 (latex . t)))
   (add-hook 'markdown-mode-hook 'auto-fill-mode)
   ;;; from David O'toole org tutorial.
   (define-key global-map "\C-cl" 'org-store-link)
   (define-key global-map "\C-ca" 'org-agenda)
+  (define-key global-map "\C-cc" 'org-capture)
   (setq org-log-done t))
 ;; The above is the default in recent emacsen
+
+
+;; Org agenda
+(setq org-agenda-files '("~/Dropbox/org/"))
 
 
 
@@ -236,6 +242,9 @@
   :ensure t
   :config
   (require 'helm-config)
+  (progn
+	;; rebind tab to run persistent action
+	(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action))
   (setq helm-M-x-fuzzy-match t)
   (setq helm-buffers-fuzzy-matching t
         helm-recentf-fuzzy-match t)
@@ -342,6 +351,7 @@
   :config
   (progn
 	(setq ac-dwim t)
+	(add-to-list 'ac-modes 'sql-mode)
 	(add-to-list 'ac-modes 'latex-mode)
 	(setq ac-sources '(ac-source-yasnippet
 					   ac-source-abbrev
@@ -416,6 +426,8 @@
 ;; ============= open smart line above end =============
 
 ;;(define-key ac-mode-map (kbd "TAB") 'auto-complete)
+;; From Bodizhar Batsov. Pressing TAB one time will indent
+;; pressing TAB again will show auto completions
 (setq tab-always-indent 'complete)
 
 
@@ -425,7 +437,7 @@
 ;; (global-set-key (kbd "C-=") 'er/expand-region)
 (use-package expand-region
   :ensure t
-  :bind ("C-=" . er/expand-region))
+  :bind ("C-c v" . er/expand-region))
 
 
 (when (not package-archive-contents)
@@ -473,6 +485,11 @@
   :ensure t
   :bind (("C-x g" . magit-status)))
 
+;; git gutter
+(use-package git-gutter
+  :ensure t
+  :init
+  (global-git-gutter-mode +1))
 
 ;; interactive do mode.
 (require 'ido)
@@ -548,18 +565,19 @@ kept-old-versions 5    ; and how many of the old
 
 
 
-;;; Global Set up. Theme etc.
+;;;=========== Global Set up. Themes/line numbers etc. =================
+;; Startup Options
 (setq inhibit-startup-message t) ;; hide the startup message
-;; atom-one-dark-theme
-;; (load-theme 'atom-one-dark t)
+(setq inhibit-splash-screen t
+      initial-scratch-message nil
+      initial-major-mode 'org-mode)
 ;; sanity inc steve purcell theme
-(load-theme 'sanityinc-tomorrow-eighties t) ;load tomorrow night theme
+;; (load-theme 'sanityinc-tomorrow-eighties t) ;load tomorrow night theme
+(load-theme 'leuven t)
 ;; enable line numbers globally
 (global-linum-mode t) 
 ;; enable column numbers
 (setq column-number-mode t)
-
-
 ;; this line of code restores the menu bar and tool bar back.
 (defun restore-menu-bar()
   (interactive)
@@ -569,26 +587,28 @@ kept-old-versions 5    ; and how many of the old
 
 (restore-menu-bar)
 ;; highlights the currently being edited line. better visibility.
-(global-hl-line-mode 1) ;; don't like how it obscures the cursor. disabled for now.
-;; (set-face-background 'hl-line "#3e4446") ; background face of the current line
-(set-face-foreground 'highlight nil)     ;keep synatax highlighting in the current line
+(global-hl-line-mode 1) 
+;;keep synatax highlighting in the current line
+(set-face-foreground 'highlight nil) 
+;;; ================= Global set up end ====================================
 
 
-
-;; Turn on the vertical-ido mode.
+;; Turn on the vertical-ido mode. ===========
 (require 'ido-vertical-mode)
 (ido-mode 1)
+(setq ido-use-faces 't)
 (ido-vertical-mode 1)
 (setq ido-vertical-define-keys 'C-n-and-C-p-only)
-
+;; vertical ide mode etc end =================
 ;; Use key-chord mode.
-;; (require 'key-chord)
-;; (key-chord-mode 1)
+
+;; Key chords package. ================
 (use-package key-chord
   :ensure t
   :config
   (key-chord-mode +1)
   :commands key-chord-mode)
+;; key chord mode end =================
 
 ;; configuring ace window mode. You can invoke ace-window my doing 'M-p'
 ;; (global-set-key (kbd "M-p") (interactive) (ace-window))
@@ -690,7 +710,7 @@ kept-old-versions 5    ; and how many of the old
 ;; emacs respond to system clipboard and so we can all get along with
 ;; the Mac OS X in general..
 (delete-selection-mode t)
-;; (transient-mark-mode t)
+(transient-mark-mode t)
 (setq select-enable-clipboard t)
 
 ;; Always highlight parenthesis. You can actually go insane without this.
