@@ -2,6 +2,11 @@
 (add-hook 'sql-interactive-mode-hook
           (lambda ()
             (toggle-truncate-lines t)))
+;; highlight postgresql keywords by default.
+(add-to-list 'auto-mode-alist
+             '("\\.psql$" . (lambda ()
+                              (sql-mode)
+                              (sql-highlight-postgres-keywords))))
 ;; Indentation is set to 2
 (setq sql-indent-offset 2)
 
