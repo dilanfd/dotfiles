@@ -1,6 +1,7 @@
 # This is an .zshrc configuration
 # Owner: Dilan Fernando <dilan.fd@gmail.com>
 # Refactored on: 04/15/2018.
+# Just another line.
 
 
 
