@@ -85,9 +85,8 @@
   :ensure t
   :config
   (require 'dired+)
-  (add-hook 'dired-mode-hook   (lambda nil (auto-revert-mode 1)))
-  ;; (add-hook 'wdired-mode-hook (lambda nil (auto-revert-mode 1)))﻿
-  )
+  (setq-default dired-listing-switches "-alh") ; human readable units
+  (add-hook 'dired-mode-hook   (lambda nil (auto-revert-mode 1))))
 ;; ============ DIRED end =============
 
 
@@ -236,6 +235,14 @@
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 ;;; =========== org bullets end ============
+
+;;  THEMES BEFORE HELM CONFIG to get yellow background in helm
+;; sanity inc steve purcell theme
+;; (load-theme 'sanityinc-tomorrow-eighties t) ;load tomorrow night theme
+(load-theme 'leuven t)
+;; (load-theme 'arjen-grey t)
+
+;; THEME config end
 
 ;;; ============ HELM CONFIG ===============
 (use-package helm
@@ -564,16 +571,13 @@ kept-old-versions 5    ; and how many of the old
 
 
 
-
 ;;;=========== Global Set up. Themes/line numbers etc. =================
 ;; Startup Options
 (setq inhibit-startup-message t) ;; hide the startup message
 (setq inhibit-splash-screen t
       initial-scratch-message nil
       initial-major-mode 'org-mode)
-;; sanity inc steve purcell theme
-;; (load-theme 'sanityinc-tomorrow-eighties t) ;load tomorrow night theme
-(load-theme 'leuven t)
+
 ;; enable line numbers globally
 (global-linum-mode t) 
 ;; enable column numbers
