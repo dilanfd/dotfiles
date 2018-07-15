@@ -13,6 +13,7 @@
   (find-file-other-window user-init-file))
 ;; open init file by "C -c I"
 (global-set-key (kbd "C-c I") 'find-user-init-file)
+
 ;; Use a single key stroke to reload init file.
 (defun reload-init-file ()
   "Reload the `user-init-file'"
@@ -87,7 +88,15 @@
   (require 'dired+)
   (setq-default dired-listing-switches "-alh") ; human readable units
   (add-hook 'dired-mode-hook   (lambda nil (auto-revert-mode 1))))
+
+;; Move files between split panes.
+(setq dired-dwim-target t)
 ;; ============ DIRED end =============
+
+
+
+;; Avy configuration from abo-abo
+(global-set-key (kbd "C-:") 'avy-goto-char)
 
 
 ;; =========== direfl ============
@@ -239,7 +248,9 @@
 ;;  THEMES BEFORE HELM CONFIG to get yellow background in helm
 ;; sanity inc steve purcell theme
 ;; (load-theme 'sanityinc-tomorrow-eighties t) ;load tomorrow night theme
-(load-theme 'leuven t)
+;; (load-theme 'leuven t)
+(load-theme 'zenburn t)
+
 ;; (load-theme 'arjen-grey t)
 
 ;; THEME config end
@@ -251,7 +262,8 @@
   (require 'helm-config)
   (progn
 	;; rebind tab to run persistent action
-	(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action))
+	(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+	)
   (setq helm-M-x-fuzzy-match t)
   (setq helm-buffers-fuzzy-matching t
         helm-recentf-fuzzy-match t)
@@ -263,6 +275,21 @@
   ("C-x b" . helm-mini)
   ("M-x" . helm-M-x)
   ("C-x C-f" . helm-find-files))
+;; use helm for flyspell correctons.
+(require 'helm-flyspell)
+(define-key flyspell-mode-map (kbd "C-.") 'helm-flyspell-correct)
+;; (define-key flyspell-mode-map (kbd "<f12>") 'flyspell-auto-correct-previous-word)
+
+;; helm comany
+(eval-after-load 'company
+  '(progn
+     (define-key company-mode-map (kbd "C-:") 'helm-company)
+     (define-key company-active-map (kbd "C-:") 'helm-company)))
+;; end helm company
+
+;; Helm bibtex configuration
+(setq bibtex-completion-bibliography
+      '("~/Numerical_Project_SMS/thesis/references.bib"))
 ;;; ============ HELM END ==================
 
 
@@ -333,51 +360,29 @@
   (setq yas-triggers-in-field t)) ;snippet inside snippet trigger
 
 
-;;===========yas expand using C-TAB ===========
-;; there will be no conflicts with indent-according-to-mode
-;; and jedi and other auto completion stuff. Nice workaround.
-;; (define-key yas-minor-mode-map (kbd "<tab>") nil)
-;; (define-key yas-minor-mode-map (kbd "TAB") nil)
-;; (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand)
-;; ========== yasnippts end =================
-
 ;;; ========== multiple cursors ==================
 (use-package multiple-cursors
   :ensure t
-  :bind (("M-." . mc/mark-next-like-this)
-         ("M-," . mc/unmark-next-like-this)
-         ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+		 ("C->" . mc/mark-next-like-this)
+		 ("C-<" . mc/unmark-next-like-this)
+		 ("C-c C-<" . mc/mark-all-like-this)
+		 ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
+;; This is globally useful, so it goes under `C-x', and `m'
+;; for "multiple-cursors" is easy to remember.
+(define-key ctl-x-map "\C-m" #'mc/mark-all-dwim)
 ;; ======== multiple cursors end ================
 
-;;============ Auto Complte settings =============
-(use-package auto-complete
-  :ensure t
-  :init
-  (progn
-	(ac-config-default))
-  :config
-  (progn
-	(setq ac-dwim t)
-	(add-to-list 'ac-modes 'sql-mode)
-	(add-to-list 'ac-modes 'latex-mode)
-	(setq ac-sources '(ac-source-yasnippet
-					   ac-source-abbrev
-					   ac-source-words-in-same-mode-buffers))
-	(setq ac-auto-start nil)
-	(ac-set-trigger-key "TAB")))
 
 
-;; ========== Auto Complete Settings end ===========
 
-;; ;; C auto-complete configuration.
-;; (defun my:ac-c-headers-init ()
-;;   (require 'ac-c-headers)
-;;   (add-to-list 'ac-sources 'ac-source-c-headers)
-;;   (add-to-list 'achead:include-directories  '"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"))
+;; TRAMP Configuration for AWS
+;;(tramp-set-completion-function "ssh"
+;; ((tramp-parse-sconfig "~/.ssh/config")))
+(setq tramp-default-method "ssh")
+;; TRAMP config END
 
-;; (add-hook 'c++-mode-hook 'my:ac-c-headers-init)
-;; (add-hook 'c-mode-hook 'my:ac-c-headers-)
-;; ;; ;;========== yasnippet and autocomplete end =============
+
 
 ;; make highlighted selction more readable.
 (set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
@@ -385,6 +390,25 @@
 
 ;; NO BACKUP FILES. ANNOYING!!! Use GIT FFS
 (setq make-backup-files nil)
+
+
+
+
+;; IRONY mode for c/c++
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
+
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
 
 ;; enable and use autocomplete globally..
@@ -400,23 +424,71 @@
   (define-key company-active-map (kbd "S-TAB") 'company-select-previous)
   (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
   (setq company-require-match 'never)
-  (setq company-idle-delay              nil
-		company-minimum-prefix-length   2
-		company-show-numbers            t
-		company-tooltip-limit           20
-		company-dabbrev-downcase        nil
-		company-backends                '((company-irony company-gtags))
-		)
+  (setq 
+   company-minimum-prefix-length   2
+   company-show-numbers            t
+   company-tooltip-limit           20
+   company-dabbrev-downcase        nil
+   company-backends                '((company-irony company-gtags)))
   :bind ("C-;" . company-complete-common))
 
+;; company irony.
+(add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
+(setq company-backends (delete 'company-semantic company-backends))
+;; TuhDO says remove the following and....
+;; (eval-after-load 'company
+;;   '(add-to-list
+;;     'company-backends 'company-irony))
+;; Add the below code.
+(require 'company-irony-c-headers)
+(eval-after-load 'company
+  '(add-to-list
+    'company-backends '(company-irony-c-headers company-irony)))
+
+;; C/C++ syntax checking
+(add-hook 'c++-mode-hook 'flycheck-mode)
+(add-hook 'c-mode-hook 'flycheck-mode)
+
+
+;; C/C++ tab completion with no delay
+(setq company-idle-delay 0)
+(define-key c-mode-map [(tab)] 'company-complete)
+(define-key c++-mode-map [(tab)] 'company-complete)
+
+;; Company auctex
+(require 'company-auctex)
+(company-auctex-init)
+
+
+;; realgud debuggin for python
+(use-package realgud
+  :ensure t
+  :commands (realgud:ipdb)
+  :config
+  (setq gud-tooltip-mode 1)
+  (setq tooltip-mode 1))
+
+
+;; Company python set up
+(defun my/python-mode-hook ()
+  (add-to-list 'company-backends 'company-jedi))
+(add-hook 'python-mode-hook 'my/python-mode-hook)
 
 ;; ========= company c headers configuration =======
 (require 'company-c-headers)
 (add-to-list 'company-backends 'company-c-headers)
 (add-to-list 'company-c-headers-path-system "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1")
+;; stuff after company refused to work for latex and c
+(add-to-list 'company-backends 'company-dabbrev-code) 
+(add-to-list 'company-backends 'company-yasnippet)
+(add-to-list 'company-backends 'company-files)
 
 (add-hook 'c++-mode-hook 'company-mode)
 (add-hook 'c-mode-hook 'company-mode)
+(add-hook 'latex-mode-hook 'company-mode)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-irony))
+
 
 
 ;; ============ open smart line above =============
@@ -432,7 +504,7 @@
 (global-set-key (kbd "M-o") 'smart-open-line-above)
 ;; ============= open smart line above end =============
 
-;;(define-key ac-mode-map (kbd "TAB") 'auto-complete)
+
 ;; From Bodizhar Batsov. Pressing TAB one time will indent
 ;; pressing TAB again will show auto completions
 (setq tab-always-indent 'complete)
@@ -440,8 +512,6 @@
 
 ;; Setting up Expand Region. Selecting word, paragraph, function
 ;; etc quicker.
-;; (require 'expand-region)
-;; (global-set-key (kbd "C-=") 'er/expand-region)
 (use-package expand-region
   :ensure t
   :bind ("C-c v" . er/expand-region))
@@ -449,8 +519,8 @@
 
 (when (not package-archive-contents)
   (package-refresh-contents))
-;; set default font and size.
 
+;; set default font and size.
 (set-frame-font "Monaco-16" nil t)
 
 (defvar myPackages
@@ -486,8 +556,6 @@
 
 
 ;;magit (git) configuration.
-;; (require 'magit)
-;; (global-set-key (kbd "C-x g") 'magit-status)
 (use-package magit
   :ensure t
   :bind (("C-x g" . magit-status)))
@@ -507,14 +575,6 @@
 (x-focus-frame nil)
 
 
-;; python-jedi mode. Helps with python autocompletion etc.
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:setup-keys t)
-(setq jedi:complete-on-dot t)                 ; optional
-
-;; make sure all backup files live in only one place.
-;;(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
-
 ;;enabling which key mode. (Gives a drop down of available keys after C-x
 ;; if you don't remember the key combination.
 ;; (which-key-mode t)
@@ -532,11 +592,6 @@
 (require 'yasnippet)
 (yas-global-mode 1)
 
-;; word-wrapping
-;; (setq-default word-wrap t)
-;; (global-visual-line-mode t) ; makes emacs slow.
-
-
 
 ;;loading latex preview pane automatically with a .tex document
 ;;(latex-preview-pane-enable)
@@ -549,23 +604,19 @@
 ;; as for just y/n instead of yes/no.
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;; confirm before killing emacs. helpful
+;; confirm before killing emacs. helpful when I do stupid things.
 (when (window-system)
   (setq confirm-kill-emacs 'yes-or-no-p))
-
-;;split the windows vertically
-;;(setq split-width-threshold nil) ;; didn't really work the way I intended. So disabled for now.
-;; learned how to mange with keyboard shortcuts.
 
 
 ;; ------------ back up files customization.
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
-backupP-by-copying t    ; Don't delink hardlinks
-version-control t      ; Use version numbers on backups
-delete-old-versions t  ; Automatically delete excess backups
-kept-new-versions 20   ; how many of the newest versions to keep
-kept-old-versions 5    ; and how many of the old
-)
+	  backupP-by-copying t    ; Don't delink hardlinks
+	  version-control t      ; Use version numbers on backups
+	  delete-old-versions t  ; Automatically delete excess backups
+	  kept-new-versions 20   ; how many of the newest versions to keep
+	  kept-old-versions 5    ; and how many of the old
+	  )
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
 ;; ------------ back up files customization end
 
@@ -687,14 +738,14 @@ kept-old-versions 5    ; and how many of the old
 ;; (setq mac-left-option-modifier 'super)    ;left option key is super
 ;; (setq mac-right-option-modifier 'control) ;right option key is ctrl
 (setq mac-function-modifier 'hyper)     ;make Fn key do hyper
-(setq ns-option-modifier      'super
+(setq ns-option-modifier      'meta
       ns-right-option-modifer 'control)
 
 
 ;; =====================  Steve Yegge =====================================
 ;; Following two lines are not bound to anything by default
 ;; no harm in keeping them.
-(global-set-key "\C-x\C-m" 'execute-extended-command) ; C-x C-m invokes M-x
+;; (global-set-key "\C-x\C-m" 'execute-extended-command) ; C-x C-m invokes M-x
 (global-set-key "\C-c\C-m" 'execute-extended-command) ; C-c C-m invokes M-x
 
 ;; C-w does backward kill word. It is already bound to kill-region
