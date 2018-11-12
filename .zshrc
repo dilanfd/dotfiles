@@ -48,6 +48,8 @@ export LDFLAGS="-L/usr/local/opt/openssl/lib"
 export CPPFLAGS="-I/usr/local/opt/openssl/include"
 # For pkg-config to find openSSL
 export PKG_CONFIG_PATH="/usr/local/opt/openssl/lib/pkgconfig"
+# for pkg-config to find libxml2
+# export PKG_CONFIG_PATH="/usr/local/opt/libxml2/lib/pkgconfig"
 ################### ENV VAR END ################################
 
 
@@ -177,6 +179,16 @@ function gi() { curl -L -s https://www.gitignore.io/api/$@ ;}
 # make sure R-studio sees the homebrew installed latest R
 export RSTUDIO_WHICH_R=/usr/local/bin/R
 ################### R STUDIO and R END ##################
+
+
+
+
+###############################################################################
+#                     CS50 installation as per github repo                    #
+###############################################################################
+export LIBRARY_PATH=/usr/local/lib
+export C_INCLUDE_PATH=/usr/local/include
+export LD_LIBRARY_PATH=/usr/local/lib
 
 
 

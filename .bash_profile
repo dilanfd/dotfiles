@@ -1,3 +1,4 @@
+export CLICOLOR=1
 export PATH="$HOME/anaconda/bin:/usr/local/bin:/bin:/usr/sbin:/sbin:/usr/bin:$PATH"
 
 export PATH=$PATH:/Library/TeX/Distributions/.DefaultTeX/Contents/Programs/texbin
@@ -13,7 +14,7 @@ export PATH="/Users/Dilan/anaconda3/bin:$PATH"
 # added by Anaconda3 4.4.0 installer
 export PATH="/Users/Dilan/anaconda/bin:$PATH"
 # Enable tab completion
-source ~/code/shellScripts/git-completion.bash
+source ~/my-code/shellScripts/git-completion.bash
 
 # colors!
 green="\[\033[0;32m\]"
@@ -22,7 +23,7 @@ purple="\[\033[0;35m\]"
 reset="\[\033[0m\]"
 
 # Change command prompt
-source ~/code/shellScripts/git-prompt.sh
+source ~/my-code/shellScripts/git-prompt.sh
 
 export GIT_PS1_SHOWDIRTYSTATE=1
 # '\u' adds the name of the current user to the prompt

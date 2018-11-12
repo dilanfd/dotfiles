@@ -120,13 +120,34 @@
 
 ;; =============== C configuration ============================
 ;; tab = 4 spaces. TAB
-(setq-default tab-width 4)
+;; (setq-default tab-width 4)
 (setq tab-stop-list (number-sequence 4 200 4))
 ;; However this doesn't change tab-width in c-mode.
 ;; The following is required to make c-mode indent tab = 4
-(setq-default c-basic-offset 4)
-;; Sets the default c-style to be bsd aka Allman style
-;; (setq c-default-style (cons '(c-mode . "bsd") c-default-style))
+;; (setq c-default-style "bsd"
+;;       c-basic-offset 4)
+
+(load-file "~/.emacs.d/custom_init/cs50-c-style.el")
+(c-add-style "cs50-c-style" cs50-c-style)
+
+
+(defun dilan-c-mode-hook ()
+  (setq c-basic-offset 4
+        c-indent-level 4
+        c-default-style "cs50-c-style"))
+(add-hook 'c-mode-common-hook 'dilan-c-mode-hook)
+
+;; make tab = 4 spaces and absolutely no \t characters.
+(defun dilanfd/c-hook ()
+  (setq indent-tabs-mode nil))
+(add-hook 'c++-mode-hook #'dilanfd/c-hook)
+(add-hook 'c-mode-hook #'dilanfd/c-hook)
+
+;; make RET not indent.
+;; (add-hook 'c-mode-hook
+;;           (lambda ()
+;;             (setq-local electric-indent-chars
+;;                         (remq ?\n electric-indent-chars))))
 ;;=================== C config end ==============================
 
 
@@ -170,7 +191,8 @@
   :ensure smartparens
   :config
   (progn
-    (show-smartparens-global-mode t)))
+    (show-smartparens-global-mode t))
+  (setq-default sp-escape-quotes-after-insert nil))
 
 (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
 (add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
@@ -392,7 +414,12 @@
 (setq make-backup-files nil)
 
 
+;; From Bodizhar Batsov. Pressing TAB one time will indent
+;; pressing TAB again will show auto completions
+(setq tab-always-indent 'complete)
 
+
+(require 'cc-mode)
 
 ;; IRONY mode for c/c++
 (add-hook 'c++-mode-hook 'irony-mode)
@@ -419,8 +446,8 @@
   :init (add-hook 'after-init-hook 'global-company-mode)
   :config
   (use-package company-irony :ensure t :defer t)
+  (define-key company-active-map [tab] 'company-complete-common-or-cycle)
   (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
-  (define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
   (define-key company-active-map (kbd "S-TAB") 'company-select-previous)
   (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
   (setq company-require-match 'never)
@@ -429,8 +456,8 @@
    company-show-numbers            t
    company-tooltip-limit           20
    company-dabbrev-downcase        nil
-   company-backends                '((company-irony company-gtags)))
-  :bind ("C-;" . company-complete-common))
+   company-backends                '((company-irony company-gtags company-files)))
+  :bind ("C-;" . company-complete-common-or-cycle))
 
 ;; company irony.
 (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
@@ -440,10 +467,10 @@
 ;;   '(add-to-list
 ;;     'company-backends 'company-irony))
 ;; Add the below code.
-(require 'company-irony-c-headers)
-(eval-after-load 'company
-  '(add-to-list
-    'company-backends '(company-irony-c-headers company-irony)))
+;; (require 'company-irony-c-headers)
+;; (eval-after-load 'company
+;;   '(add-to-list
+;;     'company-backends '(company-irony-c-headers company-irony)))
 
 ;; C/C++ syntax checking
 (add-hook 'c++-mode-hook 'flycheck-mode)
@@ -452,8 +479,9 @@
 
 ;; C/C++ tab completion with no delay
 (setq company-idle-delay 0)
-(define-key c-mode-map [(tab)] 'company-complete)
-(define-key c++-mode-map [(tab)] 'company-complete)
+(setq company-backends (delete 'company-semantic company-backends))
+;; (define-key c-mode-map [(tab)] 'company-complete)
+;; (define-key c++-mode-map [(tab)] 'company-complete)
 
 ;; Company auctex
 (require 'company-auctex)
@@ -503,11 +531,6 @@
 
 (global-set-key (kbd "M-o") 'smart-open-line-above)
 ;; ============= open smart line above end =============
-
-
-;; From Bodizhar Batsov. Pressing TAB one time will indent
-;; pressing TAB again will show auto completions
-(setq tab-always-indent 'complete)
 
 
 ;; Setting up Expand Region. Selecting word, paragraph, function
@@ -620,6 +643,15 @@
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
 ;; ------------ back up files customization end
 
+;; Web HTML/CSS/JS webmode.
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 
 
 ;;;=========== Global Set up. Themes/line numbers etc. =================
@@ -637,7 +669,7 @@
 (defun restore-menu-bar()
   (interactive)
   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode 1))
-  (if (fboundp 'tool-bar-mode) (tool-bar-mode -1)) ; turned off tool bar.
+  (if (fboundp 'tool-bar-mode) (tool-bar-mode 1)) ; turn on tool bar
   (if (fboundp 'menu-bar-mode) (menu-bar-mode 1)))
 
 (restore-menu-bar)
