@@ -216,3 +216,4 @@ alias config='/usr/local/bin/git --git-dir=/Users/Dilan/.myconfig/ --work-tree=/
 # THIS MUST BE THE LAST LINE
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ################ SYNTAX HIGHLIGHTING FOR ZSH END ##################
+export PATH="/usr/local/sbin:$PATH"
