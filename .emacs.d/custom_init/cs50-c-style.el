@@ -70,7 +70,7 @@
 	 (objc-method-call-cont c-lineup-ObjC-method-call-colons c-lineup-ObjC-method-call +)
 	 (objc-method-intro .
 						[0])
-	 (statement-case-intro . +)
+	 (statement-case-intro . 0)
 	 (statement-case-open . 0)
 	 (stream-op . c-lineup-streamop)
 	 (string . -1000)
