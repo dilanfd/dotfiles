@@ -134,14 +134,14 @@
 (defun dilan-c-mode-hook ()
   (setq c-basic-offset 4
         c-indent-level 4
-        c-default-style "cs50-c-style"))
+		indent-tabs-mode nil
+        c-default-style "cs50-c-style")
+  (c-set-offset 'substatement-open 0))
 (add-hook 'c-mode-common-hook 'dilan-c-mode-hook)
+(add-hook 'c++-mode-hook #'dilan-c-mode-hook)
+(add-hook 'c-mode-hook #'dilan-c-mode-hook)
 
 ;; make tab = 4 spaces and absolutely no \t characters.
-(defun dilanfd/c-hook ()
-  (setq indent-tabs-mode nil))
-(add-hook 'c++-mode-hook #'dilanfd/c-hook)
-(add-hook 'c-mode-hook #'dilanfd/c-hook)
 
 ;; make RET not indent.
 ;; (add-hook 'c-mode-hook
@@ -269,10 +269,10 @@
 
 ;;  THEMES BEFORE HELM CONFIG to get yellow background in helm
 ;; sanity inc steve purcell theme
-;; (load-theme 'sanityinc-tomorrow-eighties t) ;load tomorrow night theme
+(load-theme 'sanityinc-tomorrow-eighties t) ;load tomorrow night theme
 ;; (load-theme 'leuven t)
-(load-theme 'zenburn t)
-
+;; (load-theme 'zenburn t)
+;; (load-theme 'misterioso t)
 ;; (load-theme 'arjen-grey t)
 
 ;; THEME config end
@@ -411,8 +411,12 @@
 
 
 ;; NO BACKUP FILES. ANNOYING!!! Use GIT FFS
+;; (setq make-backup-files nil)
+;; ;;disable auto save
+;; (setq auto-save-default nil)
+;; disable auto-save and auto-backup
+(setq auto-save-default nil)
 (setq make-backup-files nil)
-
 
 ;; From Bodizhar Batsov. Pressing TAB one time will indent
 ;; pressing TAB again will show auto completions
@@ -422,21 +426,18 @@
 (require 'cc-mode)
 
 ;; IRONY mode for c/c++
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'c-mode-hook 'irony-mode)
-(add-hook 'objc-mode-hook 'irony-mode)
+;; (require 'company-irony-c-headers)
+;; ;; Load with `irony-mode` as a grouped backend
+;; (eval-after-load 'company
+;;   '(add-to-list
+;;     'company-backends '(company-irony-c-headers company-irony)))
 
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
-(defun my-irony-mode-hook ()
-  (define-key irony-mode-map [remap completion-at-point]
-    'irony-completion-at-point-async)
-  (define-key irony-mode-map [remap complete-symbol]
-    'irony-completion-at-point-async))
+;; (add-hook 'c++-mode-hook 'irony-mode)
+;; (add-hook 'c-mode-hook 'irony-mode)
+;; (add-hook 'objc-mode-hook 'irony-mode)
 
-(add-hook 'irony-mode-hook 'my-irony-mode-hook)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-
+;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
 ;; enable and use autocomplete globally..
 ;; ======= Company mode set up ============
@@ -452,10 +453,11 @@
   (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
   (setq company-require-match 'never)
   (setq 
-   company-minimum-prefix-length   2
+   company-minimum-prefix-length   3
    company-show-numbers            t
    company-tooltip-limit           20
    company-dabbrev-downcase        nil
+   company-selection-wrap-around   t
    company-backends                '((company-irony company-gtags company-files)))
   :bind ("C-;" . company-complete-common-or-cycle))
 
@@ -516,7 +518,6 @@
 (add-hook 'latex-mode-hook 'company-mode)
 (eval-after-load 'company
   '(add-to-list 'company-backends 'company-irony))
-
 
 
 ;; ============ open smart line above =============
@@ -727,7 +728,7 @@
 ;; emacs inferior shell or whatever
 
 ;; Anaconda mode.
-(add-hook 'python-mode-hook 'anaconda-mode)
+;; (add-hook 'python-mode-hook 'anaconda-mode)
 
 
 ;; python virtual environment set up
