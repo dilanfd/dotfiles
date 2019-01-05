@@ -1,5 +1,6 @@
-;; init.el --- Emacs configuration for Dilan Fernando.
-;; Last modified : Let's face it. Probably a few seconds ago... :)
+;;; Commentary:
+;;init.el --- Emacs configuration for Dilan Fernando.
+;; Last modified : Let's face it. Probably a few seconds ago...  :)
 ;; I like incessantly fiddling with the config files. ha.
 
 (setq user-full-name "Dilan Fernando")
@@ -35,7 +36,7 @@
 
 
 ;; Show date and time on status bar
-(display-time-mode 1)
+;; (display-time-mode 1)
 
 ;; Set up the customize file to its own separate file,
 ;; instead of saving customize settings in init.el.
@@ -453,7 +454,7 @@
   (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
   (setq company-require-match 'never)
   (setq 
-   company-minimum-prefix-length   3
+   company-minimum-prefix-length   2
    company-show-numbers            t
    company-tooltip-limit           20
    company-dabbrev-downcase        nil
